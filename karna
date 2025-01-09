@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>फाेई सहकारी सफ्टवेयर</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        nav {
+            background: #333;
+            color: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 1rem;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem;
+        }
+        nav a:hover {
+            background: #575757;
+        }
+        .container {
+            padding: 2rem;
+        }
+        .dashboard, .add-member, .view-members, .total-saving {
+            display: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>सहकारी सफ्टवेयर</h1>
+    </header>
+    <nav>
+        <a href="#" onclick="showSection('dashboard')">ड्यासबोर्ड</a>
+        <a href="#" onclick="showSection('add-member')">सदस्य थप</a>
+        <a href="#" onclick="showSection('view-members')">सदस्य सूची</a>
+        <a href="#" onclick="showSection('total-saving')">कुल बचत</a>
+    </nav>
+    <div class="container">
+        <!-- Dashboard -->
+        <div id="dashboard" class="dashboard">
+            <h2>ड्यासबोर्ड</h2>
+            <p>यहाँ सहकारीको सम्पूर्ण गतिविधिहरू देख्न सकिन्छ।</p>
+        </div>
+
+        <!-- Add Member -->
+        <div id="add-member" class="add-member">
+            <h2>सदस्य थप</h2>
+            <form id="memberForm">
+                <label>नाम:</label><br>
+                <input type="text" id="name" required><br><br>
+                <label>मोबाइल नम्बर:</label><br>
+                <input type="text" id="mobile" required><br><br>
+                <label>बचत रकम:</label><br>
+                <input type="number" id="savings" required><br><br>
+                <button type="button" onclick="addMember()">थप्नुहोस्</button>
+            </form>
+        </div>
+
+        <!-- View Members -->
+        <div id="view-members" class="view-members">
+            <h2>सदस्य सूची</h2>
+            <table id="membersTable">
+                <thead>
+                    <tr>
+                        <th>नाम</th>
+                        <th>मोबाइल नम्बर</th>
+                        <th>बचत रकम</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- Total Saving -->
+        <div id="total-saving" class="total-saving">
+            <h2>कुल बचत</h2>
+            <p>कुल बचत: <span id="totalSavings">0</span> रु</p>
+        </div>
+    </div>
+    <script>
+        const members = [];
+        const totalSavingsElement = document.getElementById('totalSavings');
+        const membersTableBody = document.querySelector('#membersTable tbody');
+
+        function showSection(section) {
+            document.querySelectorAll('.container > div').forEach(div => {
+                div.style.display = 'none';
+            });
+            document.getElementById(section).style.display = 'block';
+        }
+
+        function addMember() {
+            const name = document.getElementById('name').value;
+            const mobile = document.getElementById('mobile').value;
+            const savings = parseFloat(document.getElementById('savings').value);
+
+            if (name && mobile && savings) {
+                members.push({ name, mobile, savings });
+                updateMembersTable();
+                updateTotalSavings();
+                document.getElementById('memberForm').reset();
+                alert('सदस्य सफलतापूर्वक थपियो!');
+            } else {
+                alert('कृपया सबै विवरणहरू भर्नुहोस्।');
+            }
+        }
+
+        function updateMembersTable() {
+            membersTableBody.innerHTML = '';
+            members.forEach(member => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${member.name}</td>
+                    <td>${member.mobile}</td>
+                    <td>${member.savings}</td>
+                `;
+                membersTableBody.appendChild(row);
+            });
+        }
+
+        function updateTotalSavings() {
+            const total = members.reduce((sum, member) => sum + member.savings, 0);
+            totalSavingsElement.textContent = total;
+        }
+
+        // Default view
+        showSection('dashboard');
+    </script>
+</body>
+</html>
